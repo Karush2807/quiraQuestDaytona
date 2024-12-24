@@ -1,0 +1,168 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container-fluid py-4 px-3 px-md-4">
+    <div class="search-header mb-4">
+        <h1 class="display-5 text-white mb-4 text-center fw-bold">SEARCH RESULTS</h1>
+
+        
+        <form method="GET" action="{% url 'searchMudda' %}" class="search-form mb-5">
+            <div class="input-group">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="{{ query }}" 
+                    class="form-control form-control-lg search-input" 
+                    placeholder="Search Muddas..."
+                >
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if muddas %}
+        <div class="row g-4">
+            {% for mudda in muddas %}
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card h-100 mudda-card">
+                        {% if mudda.mudda_img %}
+                            <div class="card-img-wrapper">
+                                <img src="{{ mudda.mudda_img.url }}" 
+                                     class="card-img-top" 
+                                     alt="Mudda Image"
+                                     loading="lazy">
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="user-avatar">
+                                    <!-- Placeholder avatar, replace with actual user avatar if available -->
+                                    <div class="avatar-circle">
+                                        {{ mudda.userID.username|make_list|first|upper }}
+                                    </div>
+                                </div>
+                                <h3 class="card-title h5 mb-0 ms-2">{{ mudda.userID.username }}</h3>
+                            </div>
+                            <p class="card-text">{{ mudda.mudda_desc }}</p>
+                        </div>
+                        {% if mudda.userID == user %}
+                        <div class="card-footer bg-transparent border-top-0">
+                            <a href="{% url 'edit_mudda' mudda.id %}" 
+                               class="btn btn-outline-primary w-100">
+                                Edit Mudda
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-dark" role="alert">
+            <i class="bi bi-info-circle me-2"></i>
+            No results found.
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    body {
+        background-color: #121212;
+        color: #ffffff;
+    }
+
+    .search-input {
+        background-color: #2d2d2d;
+        border: 1px solid #404040;
+        color: #ffffff;
+        padding: 0.8rem 1.2rem;
+    }
+
+    .search-input:focus {
+        background-color: #2d2d2d;
+        border-color: #0d6efd;
+        color: #ffffff;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .search-input::placeholder {
+        color: #888;
+    }
+
+    .mudda-card {
+        background-color: #1c1c1c;
+        border: 1px solid #333;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .mudda-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-img-wrapper {
+        position: relative;
+        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        overflow: hidden;
+    }
+
+    .card-img-wrapper img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .user-avatar {
+        flex-shrink: 0;
+    }
+
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #0d6efd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: white;
+    }
+
+    .card-title {
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .card-text {
+        color: #b0b0b0;
+    }
+
+    .btn-outline-primary {
+        border-color: #0d6efd;
+        color: #0d6efd;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: #ffffff;
+    }
+
+    .alert-dark {
+        background-color: #1c1c1c;
+        border-color: #333;
+        color: #888;
+    }
+
+    @media (max-width: 768px) {
+        .search-header {
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
