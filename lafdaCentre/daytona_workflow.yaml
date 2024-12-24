@@ -1,0 +1,13 @@
+name: Lafda Workflow
+tasks:
+  - name: Case Analytics
+    script: "lafdaCentre/scripts/analytics.py"
+    dependencies:
+      - "lafdaCentre/data/cases.csv"
+    environment:
+      PYTHONPATH: "/workspace/lafdaCentre"
+  - name: Notify Users
+    script: "lafdaCentre/scripts/send_notifications.py"
+    dependencies:
+      - "lafdaCentre/data/users.csv"
+    schedule: "0 8 * * *" # Daily at 8 AM
